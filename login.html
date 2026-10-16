@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHOST CORPORATION · PREMIUM ACCESS</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #020308;
+            --red-neon: #ff0033;
+            --red-glow: rgba(255, 0, 51, 0.7);
+            --text-main: #ffffff;
+            --text-muted: #8c97a8;
+            --input-bg: rgba(5, 8, 14, 0.95);
+            --input-border: rgba(45, 55, 75, 0.75);
+        }
+
+        body.no-anim, body.no-anim * {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            user-select: none;
+        }
+
+        html, body {
+            width: 550px;
+            height: 350px;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+        }
+
+        body {
+            background-image: radial-gradient(circle at 15% 20%, rgba(255, 0, 51, 0.12) 0%, transparent 45%), radial-gradient(circle at 85% 80%, rgba(255, 0, 51, 0.1) 0%, transparent 45%), linear-gradient(135deg, #020308 0%, #0b0f18 100%);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid rgba(255, 0, 51, 0.35);
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(255, 0, 51, 0.2) inset;
+        }
+
+        /* ============================================
+           MOUSE PARTICLE EFFECTS
+           ============================================ */
+        .mouse-particle-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            background: #ff0033;
+            box-shadow: 0 0 6px #ff0033, 0 0 12px #ff0033, 0 0 18px rgba(255, 0, 51, 0.6);
+            transform: translate(-50%, -50%);
+        }
+
+            .particle.spark {
+                background: #ffffff;
+                box-shadow: 0 0 8px #ffffff, 0 0 16px #ff0033, 0 0 24px #ff0033;
+            }
+
+            .particle.ember {
+                background: #ff4d6d;
+                box-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff0033;
+            }
+
+        .cursor-aura {
+            position: fixed;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.15) 0%, rgba(255, 0, 51, 0.05) 40%, transparent 70%);
+            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+            filter: blur(2px);
+        }
+
+            .cursor-aura.hover {
+                width: 180px;
+                height: 180px;
+                background: radial-gradient(circle, rgba(255, 0, 51, 0.25) 0%, rgba(255, 0, 51, 0.1) 40%, transparent 70%);
+            }
+
+        .hover-ripple {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(255, 0, 51, 0.8);
+            animation: rippleExpand 0.8s ease-out forwards;
+        }
+
+        @keyframes rippleExpand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                border-width: 3px;
+            }
+
+            100% {
+                width: 120px;
+                height: 120px;
+                opacity: 0;
+                border-width: 0.5px;
+            }
+        }
+
+        .click-wave {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.6) 0%, rgba(255, 0, 51, 0.2) 40%, transparent 70%);
+            animation: clickWave 0.7s ease-out forwards;
+        }
+
+        @keyframes clickWave {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
+        }
+
+        .click-spark {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ffffff;
+            pointer-events: none;
+            z-index: 99999;
+            box-shadow: 0 0 8px #ffffff, 0 0 16px #ff0033;
+        }
+
+        /* ============================================
+           TYPED CHARACTER EFFECT
+           ============================================ */
+        /* The animated character that appears when typing */
+        .typed-char-effect {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: #ffffff;
+            text-shadow: 0 0 8px #ffffff, 0 0 16px #ff0033, 0 0 24px #ff0033, 0 0 32px #ff0033;
+            transform: translate(-50%, -50%);
+            animation: typedCharBurst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes typedCharBurst {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0;
+                filter: blur(4px);
+            }
+
+            40% {
+                transform: translate(-50%, -50%) scale(1.6);
+                opacity: 1;
+                filter: blur(0);
+            }
+
+            100% {
+                transform: translate(-50%, -80%) scale(1);
+                opacity: 0;
+                filter: blur(2px);
+            }
+        }
+
+        /* Character particle burst */
+        .typed-particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 99998;
+            transform: translate(-50%, -50%);
+        }
+
+            .typed-particle.red {
+                background: #ff0033;
+                box-shadow: 0 0 8px #ff0033, 0 0 16px #ff0033, 0 0 24px rgba(255, 0, 51, 0.6);
+            }
+
+            .typed-particle.white {
+                background: #ffffff;
+                box-shadow: 0 0 10px #ffffff, 0 0 20px #ff0033, 0 0 30px #ff0033;
+            }
+
+            .typed-particle.pink {
+                background: #ff4d6d;
+                box-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff0033;
+            }
+
+        /* Ring ripple around typed character */
+        .typed-char-ripple {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99997;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(255, 0, 51, 0.9);
+            animation: typedRipple 0.6s ease-out forwards;
+        }
+
+        @keyframes typedRipple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                border-width: 3px;
+            }
+
+            100% {
+                width: 50px;
+                height: 50px;
+                opacity: 0;
+                border-width: 0.5px;
+            }
+        }
+
+        /* Input glow pulse while typing */
+        .input-group.typing input {
+            animation: typingGlow 0.4s ease-out;
+        }
+
+        @keyframes typingGlow {
+            0% {
+                box-shadow: 0 0 25px rgba(255, 0, 51, 0.6), inset 0 0 20px rgba(255, 0, 51, 0.3), inset 0 2px 8px rgba(0, 0, 0, 0.7);
+                border-color: #ff4d6d;
+            }
+
+            100% {
+                box-shadow: 0 0 16px rgba(255, 0, 51, 0.3), inset 0 2px 8px rgba(0, 0, 0, 0.7);
+                border-color: var(--red-neon);
+            }
+        }
+
+        .input-group.typing i.left-icon {
+            animation: iconPulse 0.4s ease-out;
+        }
+
+        @keyframes iconPulse {
+            0% {
+                color: #ffffff;
+                text-shadow: 0 0 15px #ffffff, 0 0 25px var(--red-neon), 0 0 35px var(--red-neon);
+                transform: translateY(-50%) scale(1.3);
+            }
+
+            100% {
+                color: var(--red-neon);
+                text-shadow: 0 0 10px var(--red-neon);
+                transform: translateY(-50%) scale(1);
+            }
+        }
+
+        /* ============================================
+           ELEMENT HOVER EFFECTS
+           ============================================ */
+        .input-group:hover input {
+            border-color: rgba(255, 0, 51, 0.6);
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.25), inset 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .input-group:hover i.left-icon {
+            color: var(--red-neon);
+            text-shadow: 0 0 10px var(--red-neon);
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .btn-login {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .btn-login::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .btn-login:hover::before {
+                left: 100%;
+            }
+
+        .tab-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .tab-btn::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 0, 51, 0.25), transparent 60%);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+
+            .tab-btn:hover::after {
+                opacity: 1;
+            }
+
+        .win-control-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .win-control-btn::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at center, rgba(255, 0, 51, 0.3), transparent 70%);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+
+            .win-control-btn:hover::before {
+                opacity: 1;
+            }
+
+        .remember-me:hover .checkmark {
+            box-shadow: 0 0 20px var(--red-glow), 0 0 30px rgba(255, 0, 51, 0.5);
+            transform: scale(1.1);
+        }
+
+        .checkmark {
+            transition: all 0.3s ease;
+        }
+
+        .ghost-img {
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+            .ghost-img:hover {
+                filter: drop-shadow(0 0 30px var(--red-neon)) drop-shadow(0 0 50px rgba(255, 0, 51, 0.6));
+            }
+
+        .brand-title:hover .red-text {
+            text-shadow: 0 0 15px var(--red-neon), 0 0 30px var(--red-neon), 0 0 45px var(--red-neon);
+            animation: titlePulse 1s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% {
+                text-shadow: 0 0 15px var(--red-neon), 0 0 30px var(--red-neon);
+            }
+
+            50% {
+                text-shadow: 0 0 25px var(--red-neon), 0 0 45px var(--red-neon), 0 0 60px var(--red-neon);
+            }
+        }
+
+        .forgot-pass {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+            .forgot-pass:hover {
+                text-shadow: 0 0 10px var(--red-neon), 0 0 20px var(--red-neon);
+                color: #ff4d6d;
+                letter-spacing: 0.5px;
+            }
+
+        .input-group .right-icon:hover {
+            color: var(--red-neon);
+            text-shadow: 0 0 10px var(--red-neon);
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 0, 51, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 0, 51, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top Titlebar */
+        .window-titlebar {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            z-index: 100;
+            background: rgba(4, 6, 12, 0.92);
+            border-bottom: 1px solid rgba(255, 0, 51, 0.2);
+            -webkit-app-region: drag;
+        }
+
+        .titlebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            color: #d1d5db;
+        }
+
+            .titlebar-brand i {
+                color: var(--red-neon);
+                text-shadow: 0 0 8px var(--red-neon);
+            }
+
+        .titlebar-drag-area {
+            flex: 1;
+            height: 100%;
+            cursor: move;
+        }
+
+        .titlebar-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            -webkit-app-region: no-drag;
+        }
+
+        .win-control-btn {
+            background: transparent;
+            border: none;
+            color: #8a94a6;
+            width: 24px;
+            height: 22px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s ease;
+        }
+
+            .win-control-btn:hover {
+                color: #ffffff;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .win-control-btn.close-btn:hover {
+                background: #e60026;
+                color: white;
+                box-shadow: 0 0 12px rgba(230, 0, 38, 0.8);
+            }
+
+        .app-content {
+            flex: 1;
+            display: flex;
+            height: 322px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-side {
+            width: 175px;
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255, 0, 51, 0.15) 0%, transparent 80%);
+            border-right: 1px solid rgba(255, 0, 51, 0.18);
+            position: relative;
+        }
+
+        .ghost-img {
+            width: 85px;
+            height: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 18px var(--red-glow));
+            animation: float 4.5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .brand-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+            .brand-title .red-text {
+                color: var(--red-neon);
+                text-shadow: 0 0 15px var(--red-neon);
+            }
+
+        .brand-subtitle {
+            font-size: 8.5px;
+            letter-spacing: 4px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .form-side {
+            flex: 1;
+            padding: 12px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .form-header {
+            margin-bottom: 6px;
+        }
+
+        .welcome-text {
+            color: var(--red-neon);
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .form-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13.5px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .toast-msg {
+            display: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 10.5px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            align-items: center;
+            gap: 6px;
+            line-height: 1.2;
+        }
+
+            .toast-msg.error {
+                display: flex;
+                background: rgba(255, 0, 51, 0.18);
+                border: 1px solid rgba(255, 0, 51, 0.5);
+                color: #ff99a8;
+                box-shadow: 0 0 12px rgba(255, 0, 51, 0.25);
+            }
+
+            .toast-msg.success {
+                display: flex;
+                background: rgba(0, 255, 102, 0.15);
+                border: 1px solid rgba(0, 255, 102, 0.5);
+                color: #85ffb8;
+                box-shadow: 0 0 12px rgba(0, 255, 102, 0.25);
+            }
+
+        .inputs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+            .input-group i.left-icon {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-muted);
+                font-size: 12px;
+                transition: 0.2s;
+            }
+
+            .input-group input {
+                width: 100%;
+                background: var(--input-bg);
+                border: 1px solid var(--input-border);
+                border-radius: 8px;
+                padding: 8px 12px 8px 34px;
+                color: var(--text-main);
+                font-size: 12px;
+                outline: none;
+                transition: all 0.3s ease;
+                box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+            }
+
+                .input-group input::placeholder {
+                    color: #586377;
+                    font-size: 11.5px;
+                }
+
+                .input-group input:focus {
+                    border-color: var(--red-neon);
+                    box-shadow: 0 0 16px rgba(255, 0, 51, 0.3), inset 0 2px 8px rgba(0, 0, 0, 0.7);
+                    background: #0d121e;
+                }
+
+                    .input-group input:focus + i.left-icon {
+                        color: var(--red-neon);
+                        text-shadow: 0 0 10px var(--red-neon);
+                    }
+
+            .input-group .right-icon {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-muted);
+                font-size: 12px;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+                .input-group .right-icon:hover {
+                    color: var(--red-neon);
+                }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10.5px;
+            margin-bottom: 8px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+            .remember-me:hover {
+                color: var(--text-main);
+            }
+
+            .remember-me input {
+                display: none;
+            }
+
+        .checkmark {
+            width: 15px;
+            height: 15px;
+            background: var(--red-neon);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 9px;
+            box-shadow: 0 0 10px var(--red-glow);
+        }
+
+        .remember-me input:not(:checked) + .checkmark {
+            background: #171d2b;
+            box-shadow: none;
+            color: transparent;
+            border: 1px solid #2a3344;
+        }
+
+        .forgot-pass {
+            color: var(--red-neon);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 10.5px;
+            transition: 0.2s;
+        }
+
+            .forgot-pass:hover {
+                text-shadow: 0 0 10px var(--red-neon);
+                color: #ff4d6d;
+            }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(90deg, #b3001b, var(--red-neon), #b3001b);
+            background-size: 200% 100%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 20px var(--red-glow);
+            transition: all 0.3s ease;
+        }
+
+            .btn-login:hover {
+                box-shadow: 0 0 30px var(--red-neon), 0 0 12px var(--red-neon) inset;
+                transform: translateY(-1px);
+            }
+
+            .btn-login:active {
+                transform: translateY(0);
+            }
+
+        .bottom-tabs {
+            display: flex;
+            gap: 6px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(45, 55, 75, 0.5);
+        }
+
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 5px 4px;
+            background: rgba(14, 18, 28, 0.7);
+            border: 1px solid rgba(45, 55, 75, 0.6);
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+            .tab-btn:hover {
+                color: var(--text-main);
+                border-color: var(--red-neon);
+                background: rgba(255, 0, 51, 0.08);
+            }
+
+            .tab-btn.active {
+                color: var(--text-main);
+                border-color: var(--red-neon);
+                background: rgba(255, 0, 51, 0.15);
+                box-shadow: 0 0 12px rgba(255, 0, 51, 0.3);
+            }
+
+            .tab-btn i {
+                font-size: 11px;
+            }
+
+            .tab-btn.user-login i {
+                color: #ff4d6d;
+            }
+
+            .tab-btn.license-key i {
+                color: #4da6ff;
+            }
+
+            .tab-btn.register i {
+                color: #00e6e6;
+            }
+
+            .tab-btn.discord i {
+                color: #7289da;
+            }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mouse-particle-container" id="particleContainer"></div>
+    <div class="cursor-aura" id="cursorAura"></div>
+
+    <div class="window-titlebar" id="windowTitlebar">
+        <div class="titlebar-brand">
+            <i class="fas fa-ghost"></i>
+            <span>GHOST CORPORATION // v1.0</span>
+        </div>
+        <div class="titlebar-drag-area" id="dragArea"></div>
+        <div class="titlebar-actions">
+            <button class="win-control-btn" id="winMinBtn" title="Minimize">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button class="win-control-btn close-btn" id="winCloseBtn" title="Close">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="app-content">
+        <div class="brand-side">
+            <img src="https://github.com/ghostpanel/Ghost-Auth/releases/download/Exe_Update/Ghost.Logo.png"
+                 class="ghost-img"
+                 alt="Ghost Logo"
+                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/3565/3565418.png'">
+            <div class="brand-title">GHOST <span class="red-text">CORP</span></div>
+            <div class="brand-subtitle">PREMIUM ACCESS</div>
+        </div>
+
+        <div class="form-side">
+            <div>
+                <div class="form-header">
+                    <div class="welcome-text" id="headerSubtitle">Welcome Back</div>
+                    <div class="form-title" id="headerTitle">Login To Account</div>
+                </div>
+
+                <div class="toast-msg" id="statusToast">
+                    <i class="fas fa-circle-exclamation" id="toastIcon"></i>
+                    <span id="toastText">Error</span>
+                </div>
+
+                <form id="authForm">
+                    <div class="inputs-container">
+                        <div class="input-group" id="grpUsername">
+                            <input type="text" id="usernameInput" placeholder="Username" required autocomplete="off" spellcheck="false">
+                            <i class="fas fa-user left-icon"></i>
+                        </div>
+
+                        <div class="input-group" id="grpPassword">
+                            <input type="password" id="passwordInput" placeholder="Password" required>
+                            <i class="fas fa-lock left-icon"></i>
+                            <i class="fas fa-eye-slash right-icon" id="togglePassword"></i>
+                        </div>
+
+                        <div class="input-group hidden" id="grpLicenseKey">
+                            <input type="text" id="licenseKeyInput" placeholder="License Key" autocomplete="off" spellcheck="false">
+                            <i class="fas fa-key left-icon"></i>
+                        </div>
+
+                        <div class="input-group hidden" id="grpEmail">
+                            <input type="email" id="emailInput" placeholder="Email (optional)" autocomplete="off">
+                            <i class="fas fa-envelope left-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-options" id="grpOptions">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMeCheck" checked>
+                            <span class="checkmark"><i class="fas fa-check"></i></span>
+                            Remember Me
+                        </label>
+                        <a href="javascript:void(0)" class="forgot-pass" id="forgotPassLink">Forgot?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="submitBtn">
+                        <i class="fas fa-sign-in-alt"></i> <span id="btnText">Login</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="bottom-tabs">
+                <a href="javascript:void(0)" class="tab-btn user-login active" id="tabUserLogin">
+                    <i class="fas fa-user"></i> Login
+                </a>
+                <a href="javascript:void(0)" class="tab-btn license-key" id="tabLicenseKey">
+                    <i class="fas fa-key"></i> Key
+                </a>
+                <a href="javascript:void(0)" class="tab-btn register" id="tabRegister">
+                    <i class="fas fa-plus"></i> Register
+                </a>
+                <a href="javascript:void(0)" class="tab-btn discord" id="tabDiscord">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'login';
+
+        const authForm = document.getElementById('authForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const licenseKeyInput = document.getElementById('licenseKeyInput');
+        const emailInput = document.getElementById('emailInput');
+        const rememberMeCheck = document.getElementById('rememberMeCheck');
+        const togglePassword = document.getElementById('togglePassword');
+        const statusToast = document.getElementById('statusToast');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastText = document.getElementById('toastText');
+
+        const headerSubtitle = document.getElementById('headerSubtitle');
+        const headerTitle = document.getElementById('headerTitle');
+
+        const grpUsername = document.getElementById('grpUsername');
+        const grpPassword = document.getElementById('grpPassword');
+        const grpLicenseKey = document.getElementById('grpLicenseKey');
+        const grpEmail = document.getElementById('grpEmail');
+        const grpOptions = document.getElementById('grpOptions');
+
+        const tabUserLogin = document.getElementById('tabUserLogin');
+        const tabLicenseKey = document.getElementById('tabLicenseKey');
+        const tabRegister = document.getElementById('tabRegister');
+        const tabDiscord = document.getElementById('tabDiscord');
+
+        const particleContainer = document.getElementById('particleContainer');
+        const cursorAura = document.getElementById('cursorAura');
+
+        function getBtnText() {
+        return document.getElementById('btnText');
+        }
+
+        /* ============================================
+        MOUSE PARTICLE EFFECTS
+        ============================================ */
+        let lastParticleTime = 0;
+        let particleThrottle = 40;
+        let mouseX = 0, mouseY = 0;
+        let auraX = 0, auraY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        const now = Date.now();
+        if (now - lastParticleTime > particleThrottle) {
+        createMouseParticle(mouseX, mouseY);
+        lastParticleTime = now;
+        }
+        });
+
+        function animateAura() {
+        const ease = 0.12;
+        auraX += (mouseX - auraX) * ease;
+        auraY += (mouseY - auraY) * ease;
+        cursorAura.style.left = auraX + 'px';
+        cursorAura.style.top = auraY + 'px';
+        requestAnimationFrame(animateAura);
+        }
+        animateAura();
+
+        function createMouseParticle(x, y) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        const types = ['', 'spark', 'ember', 'spark'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        if (type) particle.classList.add(type);
+
+        const size = 2 + Math.random() * 4;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        const offsetX = (Math.random() - 0.5) * 20;
+        const offsetY = (Math.random() - 0.5) * 20;
+        particle.style.left = (x + offsetX) + 'px';
+        particle.style.top = (y + offsetY) + 'px';
+
+        const velX = (Math.random() - 0.5) * 3;
+        const velY = (Math.random() - 0.5) * 3 - 1;
+
+        particleContainer.appendChild(particle);
+
+        let life = 1;
+        let posX = x + offsetX;
+        let posY = y + offsetY;
+        let currentVelX = velX;
+        let currentVelY = velY;
+
+        function animate() {
+        life -= 0.025;
+        posX += currentVelX;
+        posY += currentVelY;
+        currentVelX *= 0.98;
+        currentVelY *= 0.98;
+        currentVelY += 0.05;
+
+        particle.style.left = posX + 'px';
+        particle.style.top = posY + 'px';
+        particle.style.opacity = life;
+        particle.style.transform = `translate(-50%, -50%) scale(${life})`;
+
+        if (life > 0) {
+        requestAnimationFrame(animate);
+        } else {
+        particle.remove();
+        }
+        }
+        animate();
+        }
+
+        document.addEventListener('mousedown', (e) => {
+        createClickWave(e.clientX, e.clientY);
+        createClickSparks(e.clientX, e.clientY);
+        });
+
+        function createClickWave(x, y) {
+        const wave = document.createElement('div');
+        wave.className = 'click-wave';
+        wave.style.left = x + 'px';
+        wave.style.top = y + 'px';
+        document.body.appendChild(wave);
+        setTimeout(() => wave.remove(), 700);
+        }
+
+        function createClickSparks(x, y) {
+        const sparkCount = 10;
+        for (let i = 0; i < sparkCount; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'click-spark';
+        spark.style.left = x + 'px';
+        spark.style.top = y + 'px';
+        document.body.appendChild(spark);
+
+        const angle = (Math.PI * 2 * i) / sparkCount + Math.random() * 0.5;
+        const speed = 2 + Math.random() * 4;
+        let posX = x;
+        let posY = y;
+        const velX = Math.cos(angle) * speed;
+        const velY = Math.sin(angle) * speed;
+        let life = 1;
+
+        function animate() {
+        life -= 0.04;
+        posX += velX;
+        posY += velY;
+        spark.style.left = posX + 'px';
+        spark.style.top = posY + 'px';
+        spark.style.opacity = life;
+        spark.style.transform = `translate(-50%, -50%) scale(${life})`;
+
+        if (life > 0) {
+        requestAnimationFrame(animate);
+        } else {
+        spark.remove();
+        }
+        }
+        animate();
+        }
+        }
+
+        /* ============================================
+        HOVER EFFECTS
+        ============================================ */
+        const interactiveElements = document.querySelectorAll(
+        'button, a, input, .tab-btn, .win-control-btn, .remember-me, .forgot-pass, .ghost-img, .brand-title, .checkmark'
+        );
+
+        interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', (e) => {
+        cursorAura.classList.add('hover');
+        createHoverRipple(e.clientX, e.clientY);
+        particleThrottle = 18;
+        createHoverBurst(el);
+        });
+
+        el.addEventListener('mouseleave', () => {
+        cursorAura.classList.remove('hover');
+        particleThrottle = 40;
+        });
+
+        el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        el.style.setProperty('--mouse-x', x + '%');
+        el.style.setProperty('--mouse-y', y + '%');
+        });
+        });
+
+        function createHoverRipple(x, y) {
+        const ripple = document.createElement('div');
+        ripple.className = 'hover-ripple';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        document.body.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 800);
+        }
+
+        function createHoverBurst(el) {
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const burstCount = 6;
+
+        for (let i = 0; i < burstCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle spark';
+        const size = 2 + Math.random() * 3;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        const angle = (Math.PI * 2 * i) / burstCount;
+        const radius = Math.max(rect.width, rect.height) / 2 + 5;
+        const startX = centerX + Math.cos(angle) * radius * 0.3;
+        const startY = centerY + Math.sin(angle) * radius * 0.3;
+
+        particle.style.left = startX + 'px';
+        particle.style.top = startY + 'px';
+        document.body.appendChild(particle);
+
+        const velX = Math.cos(angle) * 2;
+        const velY = Math.sin(angle) * 2;
+        let posX = startX;
+        let posY = startY;
+        let life = 1;
+
+        function animate() {
+        life -= 0.05;
+        posX += velX;
+        posY += velY;
+        particle.style.left = posX + 'px';
+        particle.style.top = posY + 'px';
+        particle.style.opacity = life;
+        particle.style.transform = `translate(-50%, -50%) scale(${life})`;
+
+        if (life > 0) {
+        requestAnimationFrame(animate);
+        } else {
+        particle.remove();
+        }
+        }
+        animate();
+        }
+        }
+
+        document.addEventListener('mouseleave', () => {
+        cursorAura.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', () => {
+        cursorAura.style.opacity = '1';
+        });
+
+        /* ============================================
+        TYPED CHARACTER EFFECT
+        Effect hoy character er upor, caret er na
+        ============================================ */
+        function getCaretPosition(inputEl) {
+        const mirror = document.createElement('div');
+        const computed = window.getComputedStyle(inputEl);
+
+        const properties = [
+        'boxSizing', 'width', 'height', 'overflowX', 'overflowY',
+        'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+        'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+        'fontStyle', 'fontVariant', 'fontWeight', 'fontStretch', 'fontSize',
+        'fontSizeAdjust', 'lineHeight', 'fontFamily', 'textAlign',
+        'textTransform', 'textIndent', 'textDecoration', 'letterSpacing',
+        'wordSpacing', 'tabSize'
+        ];
+
+        mirror.style.position = 'absolute';
+        mirror.style.visibility = 'hidden';
+        mirror.style.whiteSpace = 'pre';
+        mirror.style.top = '0';
+        mirror.style.left = '-9999px';
+
+        properties.forEach(prop => {
+        mirror.style[prop] = computed[prop];
+        });
+
+        mirror.textContent = inputEl.value.substring(0, inputEl.selectionStart);
+
+        const span = document.createElement('span');
+        span.textContent = inputEl.value.substring(inputEl.selectionStart) || '.';
+        mirror.appendChild(span);
+
+        document.body.appendChild(mirror);
+
+        const inputRect = inputEl.getBoundingClientRect();
+        const spanRect = span.getBoundingClientRect();
+        const mirrorRect = mirror.getBoundingClientRect();
+
+        const caretX = inputRect.left + (spanRect.left - mirrorRect.left) - inputEl.scrollLeft + parseFloat(computed.paddingLeft || 0);
+        const caretY = inputRect.top + (spanRect.top - mirrorRect.top) + parseFloat(computed.paddingTop || 0) + parseFloat(computed.fontSize) * 0.7;
+
+        document.body.removeChild(mirror);
+
+        return { x: caretX, y: caretY };
+        }
+
+        // Get the character just typed (the one before caret)
+        function getTypedChar(inputEl) {
+        const pos = inputEl.selectionStart;
+        if (pos > 0) {
+        return inputEl.value.charAt(pos - 1);
+        }
+        return null;
+        }
+
+        function createTypedCharEffect(inputEl, typedChar) {
+        if (!typedChar || typedChar === ' ') return;
+
+        const pos = getCaretPosition(inputEl);
+        const group = inputEl.closest('.input-group');
+
+        // Input glow pulse
+        if (group) {
+        group.classList.add('typing');
+        setTimeout(() => group.classList.remove('typing'), 400);
+        }
+
+        // The character position: caret ta character er por e thake, tai ektu left e shift korbo
+        // Character width approximate = fontSize * 0.6
+        const charWidth = 7;
+        const charX = pos.x - charWidth;
+        const charY = pos.y - parseFloat(window.getComputedStyle(inputEl).fontSize) * 0.5;
+
+        // 1. Create the glowing character effect at the typed character's position
+        const charEffect = document.createElement('div');
+        charEffect.className = 'typed-char-effect';
+
+        // Show actual character (or dot for password)
+        if (inputEl.type === 'password') {
+        charEffect.textContent = '•';
+        } else {
+        charEffect.textContent = typedChar;
+        }
+
+        charEffect.style.left = charX + 'px';
+        charEffect.style.top = charY + 'px';
+
+        document.body.appendChild(charEffect);
+        setTimeout(() => charEffect.remove(), 650);
+
+        // 2. Ring ripple around the character
+        const ripple = document.createElement('div');
+        ripple.className = 'typed-char-ripple';
+        ripple.style.left = charX + 'px';
+        ripple.style.top = charY + 'px';
+        document.body.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 650);
+
+        // 3. Particle burst from the character position
+        const particleCount = 6;
+        const types = ['red', 'white', 'pink', 'red', 'white', 'pink'];
+
+        for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const type = types[i % types.length];
+        particle.className = 'typed-particle ' + type;
+
+        const size = 2 + Math.random() * 4;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        const startX = charX;
+        const startY = charY;
+        particle.style.left = startX + 'px';
+        particle.style.top = startY + 'px';
+        document.body.appendChild(particle);
+
+        // Burst in all directions
+        const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5;
+        const speed = 1.5 + Math.random() * 2.5;
+        let posX = startX;
+        let posY = startY;
+        const velX = Math.cos(angle) * speed;
+        const velY = Math.sin(angle) * speed - 1; // slight upward
+        let life = 1;
+
+        function animate() {
+        life -= 0.04;
+        posX += velX;
+        posY += velY;
+        particle.style.left = posX + 'px';
+        particle.style.top = posY + 'px';
+        particle.style.opacity = life;
+        particle.style.transform = `translate(-50%, -50%) scale(${life})`;
+
+        if (life > 0) {
+        requestAnimationFrame(animate);
+        } else {
+        particle.remove();
+        }
+        }
+        animate();
+        }
+        }
+
+        // Attach to all text inputs
+        const textInputs = document.querySelectorAll(
+        '#usernameInput, #passwordInput, #licenseKeyInput, #emailInput'
+        );
+
+        textInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+        // Only trigger if actually a character was added (not deleted)
+        if (e.inputType === 'insertText' || e.inputType === 'insertFromPaste') {
+        const typedChar = getTypedChar(input);
+        if (typedChar) {
+        // Small delay to let caret settle
+        setTimeout(() => {
+        createTypedCharEffect(input, typedChar);
+        }, 5);
+        }
+        }
+        });
+        });
+
+        /* ============================================
+        EXISTING LOGIC
+        ============================================ */
+
+        togglePassword.addEventListener('click', function() {
+        const isPass = passwordInput.getAttribute('type') === 'password';
+        passwordInput.setAttribute('type', isPass ? 'text' : 'password');
+        this.classList.toggle('fa-eye-slash');
+        this.classList.toggle('fa-eye');
+        });
+
+        document.getElementById('winMinBtn').addEventListener('click', () => {
+        sendToHost({ action: 'minimize' });
+        });
+
+        document.getElementById('winCloseBtn').addEventListener('click', () => {
+        sendToHost({ action: 'close' });
+        });
+
+        document.getElementById('dragArea').addEventListener('mousedown', (e) => {
+        if (e.button === 0) {
+        sendToHost({ action: 'drag' });
+        }
+        });
+
+        function setActiveTab(tabBtn) {
+        [tabUserLogin, tabLicenseKey, tabRegister].forEach(b => b.classList.remove('active'));
+        if (tabBtn) tabBtn.classList.add('active');
+        hideToast();
+        }
+
+        tabUserLogin.addEventListener('click', () => {
+        currentMode = 'login';
+        setActiveTab(tabUserLogin);
+        headerSubtitle.textContent = 'Welcome Back';
+        headerTitle.textContent = 'Login To Account';
+        getBtnText().textContent = 'Login';
+        submitBtn.querySelector('i').className = 'fas fa-sign-in-alt';
+
+        grpUsername.classList.remove('hidden');
+        usernameInput.required = true;
+        grpPassword.classList.remove('hidden');
+        passwordInput.required = true;
+        grpLicenseKey.classList.add('hidden');
+        licenseKeyInput.required = false;
+        grpEmail.classList.add('hidden');
+        grpOptions.classList.remove('hidden');
+        });
+
+        tabLicenseKey.addEventListener('click', () => {
+        currentMode = 'license';
+        setActiveTab(tabLicenseKey);
+        headerSubtitle.textContent = 'Direct License';
+        headerTitle.textContent = 'Activate Key';
+        getBtnText().textContent = 'Activate';
+        submitBtn.querySelector('i').className = 'fas fa-key';
+
+        grpUsername.classList.add('hidden');
+        usernameInput.required = false;
+        grpPassword.classList.add('hidden');
+        passwordInput.required = false;
+        grpLicenseKey.classList.remove('hidden');
+        licenseKeyInput.required = true;
+        grpEmail.classList.add('hidden');
+        grpOptions.classList.add('hidden');
+        });
+
+        tabRegister.addEventListener('click', () => {
+        currentMode = 'register';
+        setActiveTab(tabRegister);
+        headerSubtitle.textContent = 'New Account';
+        headerTitle.textContent = 'Create Account';
+        getBtnText().textContent = 'Register';
+        submitBtn.querySelector('i').className = 'fas fa-user-plus';
+
+        grpUsername.classList.remove('hidden');
+        usernameInput.required = true;
+        grpPassword.classList.remove('hidden');
+        passwordInput.required = true;
+        grpLicenseKey.classList.remove('hidden');
+        licenseKeyInput.required = true;
+        grpEmail.classList.remove('hidden');
+        grpOptions.classList.add('hidden');
+        });
+
+        tabDiscord.addEventListener('click', () => {
+        sendToHost({ action: 'openUrl', url: 'https://discord.gg/7Jwp5Vnme6' });
+        });
+
+        document.getElementById('forgotPassLink').addEventListener('click', () => {
+        sendToHost({ action: 'forgot', username: usernameInput.value.trim() });
+        });
+
+        function showToast(message, isSuccess = false) {
+        statusToast.className = 'toast-msg ' + (isSuccess ? 'success' : 'error');
+        toastIcon.className = isSuccess ? 'fas fa-check-circle' : 'fas fa-circle-exclamation';
+        toastText.textContent = message;
+        }
+
+        function hideToast() {
+        statusToast.className = 'toast-msg';
+        statusToast.style.display = 'none';
+        }
+
+        authForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        hideToast();
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+        submitBtn.style.opacity = '0.9';
+
+        if (currentMode === 'login') {
+        sendToHost({
+        action: 'login',
+        username: usernameInput.value.trim(),
+        password: passwordInput.value,
+        remember: rememberMeCheck.checked
+        });
+        } else if (currentMode === 'license') {
+        sendToHost({
+        action: 'license',
+        key: licenseKeyInput.value.trim()
+        });
+        } else if (currentMode === 'register') {
+        sendToHost({
+        action: 'register',
+        username: usernameInput.value.trim(),
+        password: passwordInput.value,
+        key: licenseKeyInput.value.trim(),
+        email: emailInput.value.trim()
+        });
+        }
+        });
+
+        function sendToHost(payload) {
+        if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.postMessage(JSON.stringify(payload));
+        }
+        }
+
+        if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.addEventListener('message', function(event) {
+        let data = event.data;
+        if (typeof data === 'string') {
+        try { data = JSON.parse(data); } catch(e) {}
+        }
+
+        if (!data || !data.action) return;
+
+        if (data.action === 'loginResult') {
+            if (data.success) {
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> ' + (data.message || 'Granted');
+                submitBtn.style.background = 'linear-gradient(90deg, #00b33c, #00ff55, #00b33c)';
+                submitBtn.style.boxShadow = '0 0 30px rgba(0, 255, 85, 0.7)';
+                showToast(data.message || 'Access Granted!', true);
+            } else {
+                resetSubmitButton();
+                showToast(data.message || 'Invalid username or password', false);
+            }
+        } else if (data.action === 'loadSettings' || data.action === 'setSavedUsername') {
+            if (data.username) {
+                usernameInput.value = data.username;
+            }
+            if (data.password) {
+                passwordInput.value = data.password;
+                if (rememberMeCheck) rememberMeCheck.checked = true;
+            } else {
+                passwordInput.focus();
+            }
+            if (data.hue !== undefined && data.hue !== null) {
+                document.documentElement.style.setProperty('--red-neon', `hsl(${data.hue}, 100%, 62%)`);
+                document.documentElement.style.setProperty('--red-glow', `hsla(${data.hue}, 100%, 62%, 0.7)`);
+            }
+            if (data.animation !== undefined && data.animation !== null) {
+                if (!data.animation) {
+                    document.body.classList.add('no-anim');
+                } else {
+                    document.body.classList.remove('no-anim');
+                }
+            }
+        }
+        });
+        }
+
+        function resetSubmitButton() {
+        submitBtn.disabled = false;
+        submitBtn.style.background = 'linear-gradient(90deg, #b3001b, var(--red-neon), #b3001b)';
+        submitBtn.style.boxShadow = '0 0 20px var(--red-glow)';
+        submitBtn.style.opacity = '1';
+
+        if (currentMode === 'login') {
+        submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span id="btnText">Login</span>';
+        } else if (currentMode === 'license') {
+        submitBtn.innerHTML = '<i class="fas fa-key"></i> <span id="btnText">Activate</span>';
+        } else {
+        submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span id="btnText">Register</span>';
+        }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+        sendToHost({ action: 'ready' });
+        });
+    </script>
+</body>
+</html>
