@@ -1,1 +1,34 @@
-none
+{
+  "App": {
+    "LoginTitle": "GHOST CORPORATION · PREMIUM ACCESS",
+    "LoginBrandHeader": "GHOST CORPORATION // v1.0",
+    "LoginBrandTitle": "GHOST CORP",
+    "LoginBrandSubtitle": "PREMIUM ACCESS",
+    "LoginWelcomeSubtitle": "Welcome Back",
+    "LoginWelcomeTitle": "Login To Account",
+    "MainTitle": "Gh☯︎st Corporation",
+    "MainBrand": "GH☯︎ST",
+    "MainBrandSub": "PREMIUM",
+    "MainWelcomeSub": "Welcome back"
+  },
+  "Social": {
+    "Discord": "https://discord.gg/7Jwp5Vnme6",
+    "DiscordSupport": "https://discord.gg/emmWnPRrYX",
+    "YouTube": "https://www.youtube.com/channel/UCKrxqUCOc1rl1tXcRb3yOPg",
+    "TikTok": "https://www.tiktok.com/@ghost_panel_2.0"
+  },
+  "DiscordRPC": {
+    "Enabled": true,
+    "ClientId": "1560654742789824652",
+    "Details": "𝗚𝗵𝗼𝘀𝘁_𝗣𝗿𝗲𝗺𝗶𝘂𝗺_𝗣𝗮𝗻𝗲𝗹",
+    "State": "Idle",
+    "LargeImageKey": "https://github.com/ghostpanel/Ghost-Premium/releases/download/Ghost_Premium/Ghost.Gif.Logo.gif",
+    "LargeImageText": "𝗚𝗛𝗢𝗦𝗧 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 𝗕𝗨𝗬",
+    "SmallImageKey": "https://github.com/ghostpanel/Ghost-Premium/releases/download/Ghost_Premium/Ghost.Icon.gif",
+    "SmallImageText": "𝗗𝗘𝗩 - 𝗚𝗛𝗢𝗦𝗧 𝗡𝗜𝗥𝗢𝗕",
+    "Button1Label": "GHOST PANEL BUY",
+    "Button1Url": "https://discord.gg/7Jwp5Vnme6",
+    "Button2Label": "GHOST - YOUTUBE",
+    "Button2Url": "https://www.youtube.com/channel/UCKrxqUCOc1rl1tXcRb3yOPg"
+  }
+}
