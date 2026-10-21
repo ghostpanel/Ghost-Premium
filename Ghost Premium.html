@@ -2145,7 +2145,7 @@ function vExtra(){
       </div>
     </div>
 
-    <div class="snp-row" id="camDistanceRow" style="display:flex;">
+    <div class="snp-row" id="camDistanceRow" style="display:${STATE.sw['extra:cam:load'] ? 'flex' : 'none'};">
       <div class="sl">Camera Distance</div>
       <div class="snp-slider">
         <input type="range" min="1" max="10" value="${camDist}" data-cam-distance style="--p:${distPercent}%">
@@ -2454,6 +2454,11 @@ function restoreState(viewEl, viewId){
     const delayRow = viewEl.querySelector('#snpDelayRow');
     if(delayRow) delayRow.style.display = isLoaded ? 'flex' : 'none';
   }
+  if(viewId === 'extra'){
+    const isLoaded = !!STATE.sw['extra:cam:load'];
+    const camDistRow = viewEl.querySelector('#camDistanceRow');
+    if(camDistRow) camDistRow.style.display = isLoaded ? 'flex' : 'none';
+  }
   if(viewId === 'aim'){
     const at = viewEl.querySelector('[data-t="aimtime"]');
     if(at && STATE.aimtime !== undefined) at.textContent = STATE.aimtime;
@@ -2554,6 +2559,8 @@ bodyEl.addEventListener('click', e=>{
     if(!on){
       camLoadCheck.classList.remove('on');
       STATE.sw['extra:cam:load'] = false;
+      const camDistRow = document.getElementById('camDistanceRow');
+      if(camDistRow) camDistRow.style.display = 'none';
       log('▼ UNLOADED · Right Camera', '⚡');
       sendToHost({action:'cam-load', on: false});
       return;
@@ -2702,6 +2709,7 @@ bodyEl.addEventListener('input', e=>{
     const val = holder?.querySelector('.sv');
     if(val) val.textContent = v;
     STATE.camDistance = v;
+    log(`Right Camera Distance → ${v}`, '◈');
     sendToHost({action:'cam-distance', value: v});
   }
 });
@@ -2761,8 +2769,6 @@ bodyEl.addEventListener('pointerdown', e=>{
   window.addEventListener('pointerup', up);
 });
 
-const AMB = ['heap scan · clean','module walk · stable','render hook · ok','packet filter · 0 drops','thread pool · 4 workers','integrity · passed'];
-setInterval(()=>{ if(Math.random() > .6) return; log(AMB[(Math.random()*AMB.length)|0]); }, 4800);
 
 /* ═══════════════════════════════════════════
    SEARCH
@@ -3034,6 +3040,8 @@ if(window.chrome && window.chrome.webview){
           STATE.sw['extra:cam:load'] = !!d.camLoaded;
           const chk = bodyEl ? bodyEl.querySelector('[data-cam-load-check]') : null;
           if(chk) chk.classList.toggle('on', !!d.camLoaded);
+          const camDistRow = document.getElementById('camDistanceRow');
+          if(camDistRow) camDistRow.style.display = d.camLoaded ? 'flex' : 'none';
         }
         if(d.camDistance !== undefined){
           STATE.camDistance = Number(d.camDistance);
@@ -3057,14 +3065,20 @@ if(window.chrome && window.chrome.webview){
       }
       if(d.action === 'cam-load-result'){
         const chk = bodyEl ? bodyEl.querySelector('[data-cam-load-check]') : null;
+        const camDistRow = document.getElementById('camDistanceRow');
         if(d.success && d.loaded){
           STATE.sw['extra:cam:load'] = true;
           if(chk) chk.classList.add('on');
-          log('▲ Right Camera Load Success', '⚡');
+          if(camDistRow){
+            camDistRow.style.display = 'flex';
+            camDistRow.style.animation = 'in .35s var(--ease) both';
+          }
+          log('▲ ' + (d.message || 'Camera & Landing: Loaded!'), '⚡');
         } else {
           STATE.sw['extra:cam:load'] = false;
           if(chk) chk.classList.remove('on');
-          log('▼ Right Camera Load Failed', '✕');
+          if(camDistRow) camDistRow.style.display = 'none';
+          log('▼ ' + (d.message || 'Camera & Landing: Not Found!'), '✕');
         }
       }
       if(d.action === 'cam-distance-update'){
