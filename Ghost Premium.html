@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=770,initial-scale=1,user-scalable=no">
-<title>Gh☯︎st Corporation</title>
+<title></title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1663,8 +1663,8 @@ html[data-theme="light"] .esp-line-row.on .esp-checkbox{
 <div class="shell" id="shell">
   <aside class="rail">
     <div class="brand">
-      <b>GH☯︎ST</b>
-      <small>PREMIUM</small>
+      <b id="railBrandTitle"></b>
+      <small id="railBrandSub"></small>
     </div>
     <nav class="nav" id="nav"></nav>
     <div class="rail-foot">
@@ -1682,7 +1682,7 @@ html[data-theme="light"] .esp-line-row.on .esp-checkbox{
       <div class="greet">
         <div class="greet-txt">
           <div class="greet-hello">Hello, <em id="topHelloUser">Ghost Santo</em></div>
-          <div class="greet-sub">Welcome back</div>
+          <div class="greet-sub" id="topGreetSub"></div>
         </div>
       </div>
 
@@ -1733,41 +1733,44 @@ html[data-theme="light"] .esp-line-row.on .esp-checkbox{
 <div class="theme-loading" id="themeLoading"><div class="tl-spin"></div></div>
 
 <script>
-window.applyTitleDesc = function(d) {
-  if(!d) return;
-  try { localStorage.setItem('ghost_main_title_desc', JSON.stringify(d)); } catch(e){}
-  if(d.mainTitle) document.title = d.mainTitle;
-  if(d.mainBrand){
-    const b = document.querySelector('.brand b');
-    if(b) b.textContent = d.mainBrand;
-  }
-  if(d.mainBrandSub){
-    const s = document.querySelector('.brand small');
-    if(s) s.textContent = d.mainBrandSub;
-  }
-  if(d.mainWelcomeSub){
-    const ws = document.querySelector('.greet-sub');
-    if(ws) ws.textContent = d.mainWelcomeSub;
-  }
-  if(d.discordUrl){
-    window.__ghostDiscordUrl = d.discordUrl;
-    const disc = document.querySelector('.sp-social a[href*="discord"]');
-    if(disc) disc.href = d.discordUrl;
-  }
-  if(d.youtubeUrl){
-    const yt = document.querySelector('.sp-social a[href*="youtube"]');
-    if(yt) yt.href = d.youtubeUrl;
-  }
-  if(d.tiktokUrl){
-    const tt = document.querySelector('.sp-social a[href*="tiktok"]');
-    if(tt) tt.href = d.tiktokUrl;
-  }
-};
+const CONFIG_JSON_URL = "https://raw.githubusercontent.com/ghostpanel/Ghost-Premium/refs/heads/main/Title_Description.json";
+let CONFIG_REMOTE = { App: {}, Social: {} };
 
-try {
-  const cached = JSON.parse(localStorage.getItem('ghost_main_title_desc') || '{}');
-  window.applyTitleDesc(cached);
-} catch(e){}
+function loadRemoteConfig() {
+  fetch(CONFIG_JSON_URL + '?t=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      if (!data) return;
+      if (data.App) {
+        CONFIG_REMOTE.App = data.App;
+        if (data.App.MainTitle) {
+          document.title = data.App.MainTitle;
+        }
+        const bTitle = document.getElementById('railBrandTitle');
+        if (bTitle && data.App.MainBrand) {
+          bTitle.textContent = data.App.MainBrand;
+        }
+        const bSub = document.getElementById('railBrandSub');
+        if (bSub && data.App.MainBrandSub) {
+          bSub.textContent = data.App.MainBrandSub;
+        }
+        const greetSub = document.getElementById('topGreetSub');
+        if (greetSub && data.App.MainWelcomeSub) {
+          greetSub.textContent = data.App.MainWelcomeSub;
+        }
+      }
+      if (data.Social) {
+        CONFIG_REMOTE.Social = data.Social;
+        if (typeof activeTab !== 'undefined' && activeTab === 'user' && typeof renderBody === 'function') {
+          renderBody();
+        }
+      }
+    })
+    .catch(err => {
+      console.error('Remote config error:', err);
+    });
+}
+loadRemoteConfig();
 
 const I = {
   aim:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>',
@@ -2375,13 +2378,13 @@ function vUser(){
       </div>
 
       <div class="sp-social">
-        <a class="social-btn" href="${window.__ghostDiscordUrl || 'https://discord.gg/7Jwp5Vnme6'}" target="_blank" rel="noopener noreferrer">
+        <a class="social-btn" href="${CONFIG_REMOTE.Social?.Discord || ''}" target="_blank" rel="noopener noreferrer">
           ${I.discord} Discord
         </a>
-        <a class="social-btn" href="https://www.tiktok.com/@ghost_panel_2.0" target="_blank" rel="noopener noreferrer">
+        <a class="social-btn" href="${CONFIG_REMOTE.Social?.TikTok || ''}" target="_blank" rel="noopener noreferrer">
           ${I.tiktok} TikTok
         </a>
-        <a class="social-btn" href="https://www.youtube.com/channel/UCKrxqUCOc1rl1tXcRb3yOPg" target="_blank" rel="noopener noreferrer">
+        <a class="social-btn" href="${CONFIG_REMOTE.Social?.YouTube || ''}" target="_blank" rel="noopener noreferrer">
           ${I.youtube} YouTube
         </a>
       </div>
@@ -3177,9 +3180,6 @@ if(window.chrome && window.chrome.webview){
       }
       if(d.action === 'userInfo'){
         applyUserInfo(d);
-      }
-      if(d.action === 'titleDescription'){
-        window.applyTitleDesc(d);
       }
       if(d.action === 'windowRestored'){
         if(shellEl) shellEl.classList.remove('minimized');
