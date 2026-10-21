@@ -1733,6 +1733,24 @@ html[data-theme="light"] .esp-line-row.on .esp-checkbox{
 <div class="theme-loading" id="themeLoading"><div class="tl-spin"></div></div>
 
 <script>
+try {
+  const cached = JSON.parse(localStorage.getItem('ghost_main_title_desc') || '{}');
+  if(cached.mainTitle) document.title = cached.mainTitle;
+  if(cached.discordUrl) window.__ghostDiscordUrl = cached.discordUrl;
+  if(cached.mainBrand){
+    const b = document.querySelector('.brand b');
+    if(b) b.textContent = cached.mainBrand;
+  }
+  if(cached.mainBrandSub){
+    const s = document.querySelector('.brand small');
+    if(s) s.textContent = cached.mainBrandSub;
+  }
+  if(cached.mainWelcomeSub){
+    const ws = document.querySelector('.greet-sub');
+    if(ws) ws.textContent = cached.mainWelcomeSub;
+  }
+}catch(e){}
+
 const I = {
   aim:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>',
   scope:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 9v6M9 12h6"/></svg>',
@@ -2339,7 +2357,7 @@ function vUser(){
       </div>
 
       <div class="sp-social">
-        <a class="social-btn" href="https://discord.gg/7Jwp5Vnme6" target="_blank" rel="noopener noreferrer">
+        <a class="social-btn" href="${window.__ghostDiscordUrl || 'https://discord.gg/7Jwp5Vnme6'}" target="_blank" rel="noopener noreferrer">
           ${I.discord} Discord
         </a>
         <a class="social-btn" href="https://www.tiktok.com/@ghost_panel_2.0" target="_blank" rel="noopener noreferrer">
@@ -3141,6 +3159,27 @@ if(window.chrome && window.chrome.webview){
       }
       if(d.action === 'userInfo'){
         applyUserInfo(d);
+      }
+      if(d.action === 'titleDescription'){
+        try { localStorage.setItem('ghost_main_title_desc', JSON.stringify(d)); } catch(e){}
+        if(d.mainTitle) document.title = d.mainTitle;
+        if(d.mainBrand){
+          const b = document.querySelector('.brand b');
+          if(b) b.textContent = d.mainBrand;
+        }
+        if(d.mainBrandSub){
+          const s = document.querySelector('.brand small');
+          if(s) s.textContent = d.mainBrandSub;
+        }
+        if(d.mainWelcomeSub){
+          const ws = document.querySelector('.greet-sub');
+          if(ws) ws.textContent = d.mainWelcomeSub;
+        }
+        if(d.discordUrl){
+          window.__ghostDiscordUrl = d.discordUrl;
+          const disc = document.querySelector('.sp-social a[href*="discord"]');
+          if(disc) disc.href = d.discordUrl;
+        }
       }
       if(d.action === 'windowRestored'){
         if(shellEl) shellEl.classList.remove('minimized');
