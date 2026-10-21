@@ -1,34 +1,34 @@
 {
   "App": {
-    "LoginTitle": "GHOST CORPORATION · PREMIUM ACCESS",
-    "LoginBrandHeader": "GHOST CORPORATION // v2.0",
-    "LoginBrandTitle": "GHOST CORP",
+    "LoginTitle": "RS EXE PREMIUM · PREMIUM ACCESS",
+    "LoginBrandHeader": "RS EXE PREMIUM // v2.0",
+    "LoginBrandTitle": "RS EXE PANEL",
     "LoginBrandSubtitle": "PREMIUM ACCESS",
     "LoginWelcomeSubtitle": "Welcome Back",
     "LoginWelcomeTitle": "Login To Account",
-    "MainTitle": "Gh☯︎st Corporation",
-    "MainBrand": "GH☯︎ST",
+    "MainTitle": "RS EXE PREMIUM",
+    "MainBrand": "RS EXE",
     "MainBrandSub": "PREMIUM",
     "MainWelcomeSub": "Welcome back"
   },
   "Social": {
-    "Discord": "https://discord.gg/7Jwp5Vnme6",
+    "Discord": "https://discord.gg/TQFgcQmbVw",
     "DiscordSupport": "https://discord.gg/emmWnPRrYX",
-    "YouTube": "https://www.youtube.com/channel/UCKrxqUCOc1rl1tXcRb3yOPg",
-    "TikTok": "https://www.tiktok.com/@ghost_panel_2.0"
+    "YouTube": "https://www.youtube.com/@RsEXE24",
+    "TikTok": ""
   },
   "DiscordRPC": {
     "Enabled": true,
-    "ClientId": "1560654742789824652",
-    "Details": "𝗚𝗵𝗼𝘀𝘁_𝗣𝗿𝗲𝗺𝗶𝘂𝗺_𝗣𝗮𝗻𝗲𝗹",
+    "ClientId": "1562525230008770611",
+    "Details": "RS EXE PREMIUM",
     "State": "Idle",
-    "LargeImageKey": "https://github.com/ghostpanel/Ghost-Premium/releases/download/Ghost_Premium/Ghost.Gif.Logo.gif",
-    "LargeImageText": "𝗚𝗛𝗢𝗦𝗧 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 𝗕𝗨𝗬",
-    "SmallImageKey": "https://github.com/ghostpanel/Ghost-Premium/releases/download/Ghost_Premium/Ghost.Icon.gif",
-    "SmallImageText": "𝗗𝗘𝗩 - 𝗚𝗛𝗢𝗦𝗧 𝗡𝗜𝗥𝗢𝗕",
-    "Button1Label": "GHOST PANEL BUY",
-    "Button1Url": "https://discord.gg/7Jwp5Vnme6",
-    "Button2Label": "GHOST - YOUTUBE",
-    "Button2Url": "https://www.youtube.com/channel/UCKrxqUCOc1rl1tXcRb3yOPg"
+    "LargeImageKey": "https://media.giphy.com/media/lcfjrWweLBPQGyrWYi/giphy.gif",
+    "LargeImageText": "RS EXE 𝗕𝗨𝗬",
+    "SmallImageKey": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExemRkYmNpN2hmZjhxdzRqeXhwNWZlOGVndTRwdGVqc250ODlhNDYzNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/veHIwhDRl780wT2XfC/giphy.gif",
+    "SmallImageText": "𝗗𝗘𝗩 - KARIMUL",
+    "Button1Label": "RS EXE PANEL BUY",
+    "Button1Url": "https://discord.gg/TQFgcQmbVw",
+    "Button2Label": "RS EXE - YOUTUBE",
+    "Button2Url": "https://www.youtube.com/@RsEXE24"
   }
 }
