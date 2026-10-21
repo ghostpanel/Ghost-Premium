@@ -918,22 +918,41 @@
 
     <script>
         let currentMode = 'login';
+        window.applyTitleDesc = function(data) {
+            if (!data) return;
+            try { localStorage.setItem('ghost_login_title_desc', JSON.stringify(data)); } catch(e) {}
+            if (data.loginTitle) document.title = data.loginTitle;
+            if (data.brandHeader) {
+                const el = document.querySelector('#windowTitlebar .titlebar-brand span');
+                if (el) el.textContent = data.brandHeader;
+            }
+            if (data.brandSubtitle) {
+                const el = document.querySelector('.brand-subtitle');
+                if (el) el.textContent = data.brandSubtitle;
+            }
+            if (data.brandTitle) {
+                const el = document.querySelector('.brand-title');
+                if (el) {
+                    if (data.brandTitle.includes('<')) el.innerHTML = data.brandTitle;
+                    else el.textContent = data.brandTitle;
+                }
+            }
+            if (data.welcomeSubtitle && currentMode === 'login') {
+                const el = document.getElementById('headerSubtitle');
+                if (el) el.textContent = data.welcomeSubtitle;
+            }
+            if (data.welcomeTitle && currentMode === 'login') {
+                const el = document.getElementById('headerTitle');
+                if (el) el.textContent = data.welcomeTitle;
+            }
+            if (data.discordUrl) {
+                window.__ghostDiscordUrl = data.discordUrl;
+            }
+        };
+
         try {
             const cached = JSON.parse(localStorage.getItem('ghost_login_title_desc') || '{}');
-            if (cached.loginTitle) document.title = cached.loginTitle;
-            if (cached.discordUrl) window.__ghostDiscordUrl = cached.discordUrl;
-            if (cached.brandHeader) {
-                const el = document.querySelector('#windowTitlebar .titlebar-brand span');
-                if (el) el.textContent = cached.brandHeader;
-            }
-            if (cached.brandSubtitle) {
-                const el = document.querySelector('.brand-subtitle');
-                if (el) el.textContent = cached.brandSubtitle;
-            }
-            if (cached.brandTitle) {
-                const el = document.querySelector('.brand-title');
-                if (el) el.innerHTML = cached.brandTitle;
-            }
+            window.applyTitleDesc(cached);
         } catch(e) {}
 
         const authForm = document.getElementById('authForm');
@@ -1539,31 +1558,7 @@
                 }
             }
         } else if (data.action === 'titleDescription') {
-            try { localStorage.setItem('ghost_login_title_desc', JSON.stringify(data)); } catch(e) {}
-            if (data.loginTitle) document.title = data.loginTitle;
-            if (data.brandHeader) {
-                const el = document.querySelector('#windowTitlebar .titlebar-brand span');
-                if (el) el.textContent = data.brandHeader;
-            }
-            if (data.brandSubtitle) {
-                const el = document.querySelector('.brand-subtitle');
-                if (el) el.textContent = data.brandSubtitle;
-            }
-            if (data.brandTitle) {
-                const el = document.querySelector('.brand-title');
-                if (el) el.innerHTML = data.brandTitle;
-            }
-            if (data.welcomeSubtitle && currentMode === 'login') {
-                const el = document.getElementById('headerSubtitle');
-                if (el) el.textContent = data.welcomeSubtitle;
-            }
-            if (data.welcomeTitle && currentMode === 'login') {
-                const el = document.getElementById('headerTitle');
-                if (el) el.textContent = data.welcomeTitle;
-            }
-            if (data.discordUrl) {
-                window.__ghostDiscordUrl = data.discordUrl;
-            }
+            window.applyTitleDesc(data);
         }
         });
         }
