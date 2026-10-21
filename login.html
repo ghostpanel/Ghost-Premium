@@ -918,6 +918,23 @@
 
     <script>
         let currentMode = 'login';
+        try {
+            const cached = JSON.parse(localStorage.getItem('ghost_login_title_desc') || '{}');
+            if (cached.loginTitle) document.title = cached.loginTitle;
+            if (cached.discordUrl) window.__ghostDiscordUrl = cached.discordUrl;
+            if (cached.brandHeader) {
+                const el = document.querySelector('#windowTitlebar .titlebar-brand span');
+                if (el) el.textContent = cached.brandHeader;
+            }
+            if (cached.brandSubtitle) {
+                const el = document.querySelector('.brand-subtitle');
+                if (el) el.textContent = cached.brandSubtitle;
+            }
+            if (cached.brandTitle) {
+                const el = document.querySelector('.brand-title');
+                if (el) el.innerHTML = cached.brandTitle;
+            }
+        } catch(e) {}
 
         const authForm = document.getElementById('authForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -1426,7 +1443,7 @@
         });
 
         tabDiscord.addEventListener('click', () => {
-        sendToHost({ action: 'openUrl', url: 'https://discord.gg/7Jwp5Vnme6' });
+        sendToHost({ action: 'openUrl', url: window.__ghostDiscordUrl || 'https://discord.gg/7Jwp5Vnme6' });
         });
 
         document.getElementById('forgotPassLink').addEventListener('click', () => {
@@ -1520,6 +1537,32 @@
                 } else {
                     document.body.classList.remove('no-anim');
                 }
+            }
+        } else if (data.action === 'titleDescription') {
+            try { localStorage.setItem('ghost_login_title_desc', JSON.stringify(data)); } catch(e) {}
+            if (data.loginTitle) document.title = data.loginTitle;
+            if (data.brandHeader) {
+                const el = document.querySelector('#windowTitlebar .titlebar-brand span');
+                if (el) el.textContent = data.brandHeader;
+            }
+            if (data.brandSubtitle) {
+                const el = document.querySelector('.brand-subtitle');
+                if (el) el.textContent = data.brandSubtitle;
+            }
+            if (data.brandTitle) {
+                const el = document.querySelector('.brand-title');
+                if (el) el.innerHTML = data.brandTitle;
+            }
+            if (data.welcomeSubtitle && currentMode === 'login') {
+                const el = document.getElementById('headerSubtitle');
+                if (el) el.textContent = data.welcomeSubtitle;
+            }
+            if (data.welcomeTitle && currentMode === 'login') {
+                const el = document.getElementById('headerTitle');
+                if (el) el.textContent = data.welcomeTitle;
+            }
+            if (data.discordUrl) {
+                window.__ghostDiscordUrl = data.discordUrl;
             }
         }
         });
