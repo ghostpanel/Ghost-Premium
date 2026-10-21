@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GHOST CORPORATION · PREMIUM ACCESS</title>
+    <title></title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -825,7 +825,7 @@
     <div class="window-titlebar" id="windowTitlebar">
         <div class="titlebar-brand">
             <i class="fas fa-ghost"></i>
-            <span>GHOST CORPORATION // v1.0</span>
+            <span id="titlebarBrandHeader"></span>
         </div>
         <div class="titlebar-drag-area" id="dragArea"></div>
         <div class="titlebar-actions">
@@ -844,15 +844,15 @@
                  class="ghost-img"
                  alt="Ghost Logo"
                  onerror="this.src='https://cdn-icons-png.flaticon.com/512/3565/3565418.png'">
-            <div class="brand-title">GHOST <span class="red-text">CORP</span></div>
-            <div class="brand-subtitle">PREMIUM ACCESS</div>
+            <div class="brand-title" id="brandTitle"></div>
+            <div class="brand-subtitle" id="brandSubtitle"></div>
         </div>
 
         <div class="form-side">
             <div>
                 <div class="form-header">
-                    <div class="welcome-text" id="headerSubtitle">Welcome Back</div>
-                    <div class="form-title" id="headerTitle">Login To Account</div>
+                    <div class="welcome-text" id="headerSubtitle"></div>
+                    <div class="form-title" id="headerTitle"></div>
                 </div>
 
                 <div class="toast-msg" id="statusToast">
@@ -917,43 +917,51 @@
     </div>
 
     <script>
-        let currentMode = 'login';
-        window.applyTitleDesc = function(data) {
-            if (!data) return;
-            try { localStorage.setItem('ghost_login_title_desc', JSON.stringify(data)); } catch(e) {}
-            if (data.loginTitle) document.title = data.loginTitle;
-            if (data.brandHeader) {
-                const el = document.querySelector('#windowTitlebar .titlebar-brand span');
-                if (el) el.textContent = data.brandHeader;
-            }
-            if (data.brandSubtitle) {
-                const el = document.querySelector('.brand-subtitle');
-                if (el) el.textContent = data.brandSubtitle;
-            }
-            if (data.brandTitle) {
-                const el = document.querySelector('.brand-title');
-                if (el) {
-                    if (data.brandTitle.includes('<')) el.innerHTML = data.brandTitle;
-                    else el.textContent = data.brandTitle;
-                }
-            }
-            if (data.welcomeSubtitle && currentMode === 'login') {
-                const el = document.getElementById('headerSubtitle');
-                if (el) el.textContent = data.welcomeSubtitle;
-            }
-            if (data.welcomeTitle && currentMode === 'login') {
-                const el = document.getElementById('headerTitle');
-                if (el) el.textContent = data.welcomeTitle;
-            }
-            if (data.discordUrl) {
-                window.__ghostDiscordUrl = data.discordUrl;
-            }
-        };
+        const CONFIG_JSON_URL = "https://raw.githubusercontent.com/ghostpanel/Ghost-Premium/refs/heads/main/Title_Description.json";
+        let appConfig = null;
+        let socialConfig = null;
 
-        try {
-            const cached = JSON.parse(localStorage.getItem('ghost_login_title_desc') || '{}');
-            window.applyTitleDesc(cached);
-        } catch(e) {}
+        function applyBrandTitle(text) {
+            const brandTitleEl = document.getElementById('brandTitle');
+            if (!brandTitleEl || !text) return;
+            const words = text.trim().split(/\s+/);
+            if (words.length > 1) {
+                const last = words.pop();
+                brandTitleEl.innerHTML = words.join(' ') + ' <span class="red-text">' + last + '</span>';
+            } else {
+                brandTitleEl.textContent = text;
+            }
+        }
+
+        function loadRemoteConfig() {
+            fetch(CONFIG_JSON_URL + '?t=' + Date.now())
+                .then(r => r.json())
+                .then(data => {
+                    if (!data) return;
+                    if (data.App) {
+                        appConfig = data.App;
+                        if (appConfig.LoginTitle) document.title = appConfig.LoginTitle;
+                        const tbHeader = document.getElementById('titlebarBrandHeader');
+                        if (tbHeader && appConfig.LoginBrandHeader) tbHeader.textContent = appConfig.LoginBrandHeader;
+                        if (appConfig.LoginBrandTitle) applyBrandTitle(appConfig.LoginBrandTitle);
+                        const bSub = document.getElementById('brandSubtitle');
+                        if (bSub && appConfig.LoginBrandSubtitle) bSub.textContent = appConfig.LoginBrandSubtitle;
+                        if (currentMode === 'login') {
+                            if (headerSubtitle && appConfig.LoginWelcomeSubtitle) headerSubtitle.textContent = appConfig.LoginWelcomeSubtitle;
+                            if (headerTitle && appConfig.LoginWelcomeTitle) headerTitle.textContent = appConfig.LoginWelcomeTitle;
+                        }
+                    }
+                    if (data.Social) {
+                        socialConfig = data.Social;
+                    }
+                })
+                .catch(err => {
+                    console.error("Config fetch error:", err);
+                });
+        }
+        loadRemoteConfig();
+
+        let currentMode = 'login';
 
         const authForm = document.getElementById('authForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -1410,8 +1418,8 @@
         tabUserLogin.addEventListener('click', () => {
         currentMode = 'login';
         setActiveTab(tabUserLogin);
-        headerSubtitle.textContent = 'Welcome Back';
-        headerTitle.textContent = 'Login To Account';
+        headerSubtitle.textContent = (appConfig && appConfig.LoginWelcomeSubtitle) ? appConfig.LoginWelcomeSubtitle : '';
+        headerTitle.textContent = (appConfig && appConfig.LoginWelcomeTitle) ? appConfig.LoginWelcomeTitle : '';
         getBtnText().textContent = 'Login';
         submitBtn.querySelector('i').className = 'fas fa-sign-in-alt';
 
@@ -1462,7 +1470,10 @@
         });
 
         tabDiscord.addEventListener('click', () => {
-        sendToHost({ action: 'openUrl', url: window.__ghostDiscordUrl || 'https://discord.gg/7Jwp5Vnme6' });
+            const discordUrl = (socialConfig && socialConfig.Discord) ? socialConfig.Discord : '';
+            if (discordUrl) {
+                sendToHost({ action: 'openUrl', url: discordUrl });
+            }
         });
 
         document.getElementById('forgotPassLink').addEventListener('click', () => {
@@ -1557,8 +1568,6 @@
                     document.body.classList.remove('no-anim');
                 }
             }
-        } else if (data.action === 'titleDescription') {
-            window.applyTitleDesc(data);
         }
         });
         }
