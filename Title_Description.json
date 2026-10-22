@@ -1,7 +1,7 @@
 {
   "App": {
     "LoginTitle": "GHOST CORPORATION · PREMIUM ACCESS",
-    "LoginBrandHeader": "GHOST CORPORATION // v2.0",
+    "LoginBrandHeader": "GHOST CORPORATION // v3.0",
     "LoginBrandTitle": "GHOST CORP",
     "LoginBrandSubtitle": "PREMIUM ACCESS",
     "LoginWelcomeSubtitle": "Welcome Back",
@@ -9,7 +9,7 @@
     "MainTitle": "Gh☯︎st Corporation",
     "MainBrand": "GH☯︎ST",
     "MainBrandSub": "PREMIUM",
-    "MainWelcomeSub": "Welcome back"
+    "MainWelcomeSub": "Welcome back",
     "Logo": "https://github.com/ghostpanel/Ghost-Premium/releases/download/Ghost_Premium/Ghost.Logo.png"
   },
   "Social": {
