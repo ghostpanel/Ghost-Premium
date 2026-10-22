@@ -842,6 +842,7 @@
         <div class="brand-side">
             <img src="https://github.com/ghostpanel/Ghost-Auth/releases/download/Exe_Update/Ghost.Logo.png"
                  class="ghost-img"
+                 id="brandLogoImg"
                  alt="Ghost Logo"
                  onerror="this.src='https://cdn-icons-png.flaticon.com/512/3565/3565418.png'">
             <div class="brand-title" id="brandTitle"></div>
@@ -917,7 +918,7 @@
     </div>
 
     <script>
-        const CONFIG_JSON_URL = "https://raw.githubusercontent.com/ghostpanel/Ghost-Premium/refs/heads/main/Title_Description.json";
+        const CONFIG_JSON_URL = "https://raw.githubusercontent.com/ghostpanel/Ghost-Premium/refs/heads/main/RS_INFO.json";
         let appConfig = null;
         let socialConfig = null;
 
@@ -954,6 +955,19 @@
                     if (data.Social) {
                         socialConfig = data.Social;
                     }
+                    try {
+                        var _logo = (data.App && (data.App.Logo || data.App.LogoUrl || data.App.LoginLogo || data.App.LoginLogoUrl || data.App.BrandLogo || data.App.GhostLogo || data.App.AppLogo || data.App.Icon)) || data.Logo || data.LogoUrl || data.LoginLogo || data.BrandLogo || data.GhostLogo || data.AppLogo || data.Icon;
+                        if (!_logo && data.DiscordRPC && data.DiscordRPC.LargeImageKey && (data.DiscordRPC.LargeImageKey.indexOf('http://') === 0 || data.DiscordRPC.LargeImageKey.indexOf('https://') === 0)) {
+                            _logo = data.DiscordRPC.LargeImageKey;
+                        }
+                        if (_logo) {
+                            var _imgs = document.querySelectorAll('.brand-side img, .ghost-img, #brandLogoImg');
+                            _imgs.forEach(function(el) {
+                                var _sep = _logo.indexOf('?') > -1 ? '&' : '?';
+                                el.src = _logo + _sep + '_t=' + Date.now();
+                            });
+                        }
+                    } catch(e) { }
                 })
                 .catch(err => {
                     console.error("Config fetch error:", err);
