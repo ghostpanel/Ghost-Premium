@@ -1,0 +1,35 @@
+{
+  "App": {
+    "LoginTitle": "VEXORA VIP PANEL · PREMIUM ACCESS",
+    "LoginBrandHeader": "VEXORA VIP PANEL // v3.0",
+    "LoginBrandTitle": "VEXORA",
+    "LoginBrandSubtitle": "PREMIUM ACCESS",
+    "LoginWelcomeSubtitle": "Welcome Back",
+    "LoginWelcomeTitle": "Login To Account",
+    "MainTitle": "VEXORA VIP PANEL",
+    "MainBrand": "VEXORA",
+    "MainBrandSub": "PREMIUM",
+    "MainWelcomeSub": "Welcome back",
+    "Logo": "https://cdn.discordapp.com/attachments/1553671114457358436/1563189522416799864/image.png?ex=6adcb930&is=6adb67b0&hm=38ab8bbb86d42a4b4434e1cddbec10abc6f13863de2417f6e6452c38cb4ba068&"
+  },
+  "Social": {
+    "Discord": "https://discord.gg/KmQXJU7jN",
+    "DiscordSupport": "https://discord.gg/emmWnPRrYX",
+    "YouTube": "https://www.youtube.com/channel/UCKrxqUCOc1rl1tXcRb3yOPg",
+    "TikTok": "https://www.tiktok.com/@ghost_panel_2.0"
+  },
+  "DiscordRPC": {
+    "Enabled": true,
+    "ClientId": "1563190186253357108",
+    "Details": "VEXORA VIP PANEL",
+    "State": "Idle",
+    "LargeImageKey": "https://cdn.discordapp.com/attachments/1553671114457358436/1563189522416799864/image.png?ex=6adcb930&is=6adb67b0&hm=38ab8bbb86d42a4b4434e1cddbec10abc6f13863de2417f6e6452c38cb4ba068&",
+    "LargeImageText": "Vexora Premium Buy",
+    "SmallImageKey": "https://github.com/ghostpanel/Ghost-Premium/releases/download/Ghost_Premium/Ghost.Icon.gif",
+    "SmallImageText": "𝗗𝗘𝗩 - Abir Zayan",
+    "Button1Label": "Vexora PANEL BUY",
+    "Button1Url": "https://discord.gg/7Jwp5Vnme6",
+    "Button2Label": "GHOST - YOUTUBE",
+    "Button2Url": "https://www.youtube.com/channel/UCKrxqUCOc1rl1tXcRb3yOPg"
+  }
+}
