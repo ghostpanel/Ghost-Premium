@@ -708,8 +708,80 @@ html[data-theme="light"] .theme-btn .i-moon{opacity:1;transform:none}
 html[data-theme="light"] .aim-top .ar .kb.listening{background:var(--accent);color:#fff}
 @keyframes kbPulse{0%,100%{opacity:1}50%{opacity:.55}}
 
-.aim-grid{display:grid;grid-template-columns:1fr;gap:16px;align-items:start}
-.aim-col{display:flex;flex-direction:column;min-width:0}
+/* --- AIM LAYOUT CSS --- */
+.aim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 0px;
+}
+.aim-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 8px;
+}
+.aim-col.left-col {
+  justify-content: flex-start;
+}
+.aim-top.mini {
+  padding: 7px 10px 9px; 
+  margin-bottom: 0;
+}
+.aim-top.mini .al {
+  font-size: 10.5px;
+}
+.aim-top.mini .ar .kb {
+  padding: 2px 6px; 
+  font-size: 8.5px; 
+  min-width: 32px;
+}
+
+/* New Aim Headers */
+.aim-sec-header {
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+.aim-sec-header span {
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.22em;color:var(--accent);
+  text-shadow:0 0 12px color-mix(in srgb,var(--accent) 60%,transparent);
+  text-transform:uppercase;white-space:nowrap;
+}
+
+.ai-status-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  padding-top: 4px;
+}
+.ai-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 4px;
+  border-bottom: 1px dashed color-mix(in srgb, var(--line) 100%, transparent);
+}
+.ai-status-row:last-child { border-bottom: none; }
+.ai-status-label {
+  font-family:'Inter',sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  color: var(--accent);
+  text-transform: uppercase;
+  text-shadow: 0 0 10px color-mix(in srgb,var(--accent) 40%,transparent);
+}
+.ai-status-value {
+  font-family:'JetBrains Mono',monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hi);
+  font-variant-numeric: tabular-nums;
+}
+/* ------------------------------ */
 
 .status-bottom{
   margin-top:14px;
@@ -1656,6 +1728,70 @@ html[data-theme="light"] .esp-line-row.on .esp-checkbox{
   transform: scale(1.08);
 }
 
+/* ═══ DESKTOP STATUS OVERLAY ═══ */
+.desktop-status {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+  transform: translateY(-6px) scale(.96);
+}
+.desktop-status.on {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.ds-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.8), 0 0 30px -10px var(--accent);
+  pointer-events: none;
+  min-width: 170px;
+}
+.ds-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ds-row:last-child { border-bottom: none; }
+.ds-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+.ds-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+html[data-theme="light"] .ds-panel {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.3), 0 0 30px -10px var(--accent);
+}
+html[data-theme="light"] .ds-value {
+  color: #12121b;
+  text-shadow: none;
+}
 </style>
 </head>
 <body>
@@ -1732,6 +1868,17 @@ html[data-theme="light"] .esp-line-row.on .esp-checkbox{
 
 <div class="theme-loading" id="themeLoading"><div class="tl-spin"></div></div>
 
+<!-- Desktop Status Overlay (transparent floating window) -->
+<div class="desktop-status" id="desktopStatus">
+  <div class="ds-panel">
+    <div class="ds-row"><span class="ds-label">ALIVE</span><span class="ds-value" id="dsAlive">0</span></div>
+    <div class="ds-row"><span class="ds-label">KNOCK</span><span class="ds-value" id="dsKnock">0</span></div>
+    <div class="ds-row"><span class="ds-label">DEAD</span><span class="ds-value" id="dsDead">0</span></div>
+    <div class="ds-row"><span class="ds-label">TOTAL</span><span class="ds-value" id="dsTotal">0</span></div>
+    <div class="ds-row"><span class="ds-label">MATCH</span><span class="ds-value" id="dsMatch">0</span></div>
+  </div>
+</div>
+
 <script>
 const CONFIG_JSON_URL = "https://raw.githubusercontent.com/ghostpanel/Ghost-Premium/refs/heads/main/RS_INFO.json";
 let CONFIG_REMOTE = { App: {}, Social: {} };
@@ -1802,7 +1949,7 @@ const TABS = [
   { id:'user',     name:'User Info',     sub:'USER',     icon:I.user },
 ];
 
-const STATE = { sw:{}, radio:{}, slider:{}, select:{}, kb:{}, loc:{}, snpDelay:{}, snpLoad:{}, hue:270, user:{}, aimtime:'0' };
+const STATE = { sw:{}, radio:{}, slider:{}, select:{}, kb:{}, loc:{}, snpDelay:{}, snpLoad:{}, hue:270, user:{}, aimtime:'0', aiOverlay:false };
 
 function sendToHost(data){
   try{
@@ -2048,43 +2195,106 @@ function syncWheel(){
   if(c) c.style.setProperty('--wc', col);
 }
 
+/* ═══ AI Status Overlay (checkbox next to Aimbot Ai) ═══ */
+function toggleAiOverlay(on) {
+  STATE.aiOverlay = on;
+  const overlay = document.getElementById('desktopStatus');
+  if (overlay) {
+    overlay.classList.toggle('on', on);
+  }
+  // Also update the checkbox visual state
+  const cb = document.querySelector('.aim-top[data-sw="trigger-aim"] .snp-checkbox');
+  if (cb) cb.classList.toggle('on', on);
+}
+
+function syncAiOverlayValues() {
+  const vals = document.querySelectorAll('.ai-status-value');
+  if (vals.length >= 5) {
+    const map = ['dsAlive', 'dsKnock', 'dsDead', 'dsTotal', 'dsMatch'];
+    map.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = vals[i].textContent.trim();
+    });
+  }
+}
+
 function vAim(){
   return `
     <div class="snp-head"><span>AIM CONTROL</span></div>
 
-    <div class="aim-top" data-sw="aim-load">
-      <span class="al">Aimbot Head — Targets the head</span>
-      <div class="ar">
-        <button class="kb" data-kb-key="aim:aim-load">—</button>
-        <div class="sw"></div>
-      </div>
-    </div>
+    <div class="aim-grid">
+      <!-- Left Column: 3 buttons + Any Aimbot + Separator header -->
+      <div class="aim-col left-col">
+        <div class="aim-top mini" data-sw="aim-load">
+          <span class="al">Targets The Head</span>
+          <div class="ar">
+            <button class="kb" data-kb-key="aim:aim-load">—</button>
+            <div class="sw"></div>
+          </div>
+        </div>
 
-    <div class="aim-top" data-sw="aim-neck">
-      <span class="al">Aimbot Neck — Targets the neck</span>
-      <div class="ar">
-        <button class="kb" data-kb-key="aim:aim-neck">—</button>
-        <div class="sw"></div>
-      </div>
-    </div>
+        <div class="aim-top mini" data-sw="aim-neck">
+          <span class="al">Targets The Neck</span>
+          <div class="ar">
+            <button class="kb" data-kb-key="aim:aim-neck">—</button>
+            <div class="sw"></div>
+          </div>
+        </div>
 
-    <div class="aim-top" data-sw="aim-chest">
-      <span class="al">Aimbot Drag — Headshots when dragging</span>
-      <div class="ar">
-        <button class="kb" data-kb-key="aim:aim-chest">—</button>
-        <div class="sw"></div>
-      </div>
-    </div>
-    
-    <div style="height:8px"></div>
-    <div class="loc-head"><span>AIMBOT OFF/ON</span></div>
-    <div style="height:8px"></div>
+        <div class="aim-top mini" data-sw="aim-chest">
+          <span class="al">Headshots When Dragging</span>
+          <div class="ar">
+            <button class="kb" data-kb-key="aim:aim-chest">—</button>
+            <div class="sw"></div>
+          </div>
+        </div>
+        
 
-    <div class="aim-top" data-sw="aim-body">
-      <span class="al">Any Aimbot : 🔴 OFF / 🟢 ON</span>
-      <div class="ar">
-        <button class="kb" data-kb-key="aim:aim-body">—</button>
-        <div class="sw"></div>
+       <div class="loc-head aim-sec-header"><span>AIMBOT OFF/ON</span></div>
+
+        <div class="aim-top mini" data-sw="aim-body">
+          <span class="al">Aimbot : 🔴 OFF / 🟢 ON</span>
+          <div class="ar">
+            <button class="kb" data-kb-key="aim:aim-body">—</button>
+            <div class="sw"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: New Trigger Aimbot button + AI STATUS -->
+      <div class="aim-col">
+        <div class="aim-top mini" data-sw="trigger-aim">
+          <span class="al">Aimbot Ai</span>
+          <div class="ar">
+            <div class="snp-checkbox" id="aiOverlayToggle" title="Show AI Status Overlay" style="margin-right:6px;"></div>
+            <button class="kb" data-kb-key="aim:trigger-aim">—</button>
+            <div class="sw"></div>
+          </div>
+        </div>
+
+        <div class="ai-status-panel">
+          <div class="ai-status-row">
+            <span class="ai-status-label">ALIVE :</span>
+            <span class="ai-status-value">0</span>
+          </div>
+          <div class="ai-status-row">
+            <span class="ai-status-label">KNOCK :</span>
+            <span class="ai-status-value">0</span>
+          </div>
+          <div class="ai-status-row">
+            <span class="ai-status-label">DEAD :</span>
+            <span class="ai-status-value">0</span>
+          </div>
+          <div class="ai-status-row">
+            <span class="ai-status-label">TOTAL :</span>
+            <span class="ai-status-value">0</span>
+          </div>
+          <div class="ai-status-row">
+            <span class="ai-status-label">MATCH STATUS :</span>
+            <span class="ai-status-value">0</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2195,14 +2405,6 @@ function vExtra(){
   `;
 }
 
-/* ═══════════════════════════════════════════
-   ESP LINE VIEW
-   - Inject button on top
-   - Grid: Esp Counter, Auto Refresh, Esp Line, Loot Location,
-           Esp Information, Weapon Icon, Esp Skeleton, Weapon Text,
-           Fill Box, Nearby Line, Radar Map, Stream Mode,
-           Line Glow, then Position dropdown below Stream Mode
-   ═══════════════════════════════════════════ */
 function vEspLine(){
   return `
     <div class="snp-head"><span>ESP LINE MENU</span></div>
@@ -2501,6 +2703,8 @@ function restoreState(viewEl, viewId){
   if(viewId === 'aim'){
     const at = viewEl.querySelector('[data-t="aimtime"]');
     if(at && STATE.aimtime !== undefined) at.textContent = STATE.aimtime;
+    const aiOverlayToggle = viewEl.querySelector('#aiOverlayToggle');
+    if(aiOverlayToggle) aiOverlayToggle.classList.toggle('on', !!STATE.aiOverlay);
   }
   if(viewId === 'settings'){
     const animRow = viewEl.querySelector('.cfg-row[data-sw="Animation"]');
@@ -2558,6 +2762,17 @@ function selectTab(id){
 }
 
 bodyEl.addEventListener('click', e=>{
+  // AI Overlay checkbox
+  const aiCb = e.target.closest('#aiOverlayToggle');
+  if (aiCb) {
+    e.stopPropagation();
+    const on = !aiCb.classList.contains('on');
+    aiCb.classList.toggle('on', on);
+    toggleAiOverlay(on);
+    log(`${on ? '▲ ENABLED' : '▼ DISABLED'} · AI Status Overlay`, '◈');
+    return;
+  }
+
   const kb = e.target.closest('.kb');
   if(kb){
     e.stopPropagation();
@@ -3101,6 +3316,9 @@ if(window.chrome && window.chrome.webview){
             row.querySelector('.sw')?.classList.toggle('on', !!d.camOn);
           }
         }
+        if(d.aiOverlay !== undefined){
+          toggleAiOverlay(!!d.aiOverlay);
+        }
       }
       if(d.action === 'cam-load-result'){
         const chk = bodyEl ? bodyEl.querySelector('[data-cam-load-check]') : null;
@@ -3184,6 +3402,21 @@ if(window.chrome && window.chrome.webview){
       if(d.action === 'windowRestored'){
         if(shellEl) shellEl.classList.remove('minimized');
       }
+      if(d.action === 'aiOverlay'){
+        toggleAiOverlay(!!d.on);
+        const cb = bodyEl ? bodyEl.querySelector('#aiOverlayToggle') : null;
+        if(cb) cb.classList.toggle('on', !!d.on);
+      }
+      if(d.action === 'aiStatusUpdate'){
+        const vals = bodyEl ? bodyEl.querySelectorAll('.ai-status-value') : [];
+        if(vals.length >= 5){
+          const keys = ['alive','knock','dead','total','match'];
+          keys.forEach((k, i)=>{
+            if(d[k] !== undefined) vals[i].textContent = d[k];
+          });
+        }
+        syncAiOverlayValues();
+      }
       if(d.toggleId !== undefined){
         const el = bodyEl ? bodyEl.querySelector('[data-sw="'+d.toggleId+'"]') : null;
         if(el){
@@ -3213,6 +3446,19 @@ if(window.chrome && window.chrome.webview){
     }catch(e){}
   });
 }
+
+// Monitor AI status values for overlay sync
+const aiStatusObserver = new MutationObserver(() => {
+  if (STATE.aiOverlay) syncAiOverlayValues();
+});
+
+// Start observing after initial render
+setTimeout(() => {
+  const panel = document.querySelector('.ai-status-panel');
+  if (panel) {
+    aiStatusObserver.observe(panel, { childList: true, subtree: true, characterData: true });
+  }
+}, 500);
 </script>
 </body>
 </html>
