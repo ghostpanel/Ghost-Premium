@@ -2705,6 +2705,15 @@ function restoreState(viewEl, viewId){
     if(at && STATE.aimtime !== undefined) at.textContent = STATE.aimtime;
     const aiOverlayToggle = viewEl.querySelector('#aiOverlayToggle');
     if(aiOverlayToggle) aiOverlayToggle.classList.toggle('on', !!STATE.aiOverlay);
+    if(STATE.aiStatus){
+      const vals = viewEl.querySelectorAll('.ai-status-value');
+      if(vals.length >= 5){
+        const keys = ['alive','knock','dead','total','match'];
+        keys.forEach((k, i)=>{
+          if(STATE.aiStatus[k] !== undefined) vals[i].textContent = STATE.aiStatus[k];
+        });
+      }
+    }
   }
   if(viewId === 'settings'){
     const animRow = viewEl.querySelector('.cfg-row[data-sw="Animation"]');
@@ -3316,6 +3325,14 @@ if(window.chrome && window.chrome.webview){
             row.querySelector('.sw')?.classList.toggle('on', !!d.camOn);
           }
         }
+        if(d.aimAiOn !== undefined){
+          STATE.sw['aim:sw:trigger-aim'] = !!d.aimAiOn;
+          const trgRow = bodyEl ? bodyEl.querySelector('.aim-top[data-sw="trigger-aim"]') : null;
+          if(trgRow){
+            trgRow.classList.toggle('on', !!d.aimAiOn);
+            trgRow.querySelector('.sw')?.classList.toggle('on', !!d.aimAiOn);
+          }
+        }
         if(d.aiOverlay !== undefined){
           toggleAiOverlay(!!d.aiOverlay);
         }
@@ -3408,6 +3425,7 @@ if(window.chrome && window.chrome.webview){
         if(cb) cb.classList.toggle('on', !!d.on);
       }
       if(d.action === 'aiStatusUpdate'){
+        STATE.aiStatus = d;
         const vals = bodyEl ? bodyEl.querySelectorAll('.ai-status-value') : [];
         if(vals.length >= 5){
           const keys = ['alive','knock','dead','total','match'];
@@ -3418,6 +3436,7 @@ if(window.chrome && window.chrome.webview){
         syncAiOverlayValues();
       }
       if(d.toggleId !== undefined){
+        STATE.sw['aim:sw:'+d.toggleId] = !!d.on;
         const el = bodyEl ? bodyEl.querySelector('[data-sw="'+d.toggleId+'"]') : null;
         if(el){
           el.classList.toggle('on', !!d.on);
