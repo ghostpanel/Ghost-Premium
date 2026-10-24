@@ -2992,6 +2992,7 @@ bodyEl.addEventListener('pointerdown', e=>{
   const r = w.getBoundingClientRect();
   const cx = r.width/2, cy = r.height/2, rad = r.width/2;
 
+  let lastColorSend = 0;
   const move = e2 => {
     const dx = e2.clientX - r.left - cx;
     const dy = e2.clientY - r.top - cy;
@@ -3016,6 +3017,12 @@ bodyEl.addEventListener('pointerdown', e=>{
     if(c) c.style.setProperty('--wc', col);
 
     applyAccent(deg);
+
+    const now = Date.now();
+    if (now - lastColorSend > 40) {
+      lastColorSend = now;
+      sendToHost({ action: 'saveColor', hue: Math.round(deg) });
+    }
   };
 
   move(e);
