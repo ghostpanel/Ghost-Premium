@@ -1868,8 +1868,8 @@ html[data-theme="light"] .ds-value {
 
 <div class="theme-loading" id="themeLoading"><div class="tl-spin"></div></div>
 
-<!-- Desktop Status Overlay (transparent floating window) -->
-<div class="desktop-status" id="desktopStatus">
+<!-- Desktop Status Overlay (hidden internally, now rendered on real Desktop via WinForms) -->
+<div class="desktop-status" id="desktopStatus" style="display:none !important;">
   <div class="ds-panel">
     <div class="ds-row"><span class="ds-label">ALIVE</span><span class="ds-value" id="dsAlive">0</span></div>
     <div class="ds-row"><span class="ds-label">KNOCK</span><span class="ds-value" id="dsKnock">0</span></div>
@@ -2195,15 +2195,11 @@ function syncWheel(){
   if(c) c.style.setProperty('--wc', col);
 }
 
-/* ═══ AI Status Overlay (checkbox next to Aimbot Ai) ═══ */
+/* ═══ AI Status Desktop Overlay ═══ */
 function toggleAiOverlay(on) {
   STATE.aiOverlay = on;
-  const overlay = document.getElementById('desktopStatus');
-  if (overlay) {
-    overlay.classList.toggle('on', on);
-  }
-  // Also update the checkbox visual state
-  const cb = document.querySelector('.aim-top[data-sw="trigger-aim"] .snp-checkbox');
+  sendToHost({ action: 'toggle-ai-desktop-overlay', on: on });
+  const cb = document.querySelector('#aiOverlayToggle');
   if (cb) cb.classList.toggle('on', on);
 }
 
@@ -2265,9 +2261,11 @@ function vAim(){
       <!-- Right Column: New Trigger Aimbot button + AI STATUS -->
       <div class="aim-col">
         <div class="aim-top mini" data-sw="trigger-aim">
-          <span class="al">Aimbot Ai</span>
+          <div class="snp-left-wrap">
+            <div class="snp-checkbox" id="aiOverlayToggle" title="Show Desktop Overlay"></div>
+            <span class="al">Aimbot Ai</span>
+          </div>
           <div class="ar">
-            <div class="snp-checkbox" id="aiOverlayToggle" title="Show AI Status Overlay" style="margin-right:6px;"></div>
             <button class="kb" data-kb-key="aim:trigger-aim">—</button>
             <div class="sw"></div>
           </div>
