@@ -1,11 +1,14 @@
 {
   "Pattern": "FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? 00 00 00 00 ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 A5 43",
-  "EntityHeadOffset": "0xBC",
-  "EntityChestOffset": "0xB8",
-  "EntityDeadOffset": "0x68F",
-  "EntityDeadOffsetExtra": "0x6A3",
-  "EntityBotOffset": "0x18C",
-  "EntityMatchOffset": "0x104",
+  "EntityHeadOffset": "0x460",
+  "EntityChestOffset": "0x464",
+  "EntityDeadOffset": "2616",
+  "EntityDeadOffsetExtra": "2635",
+  "EntityBotOffset": "12",
+  "EntityMatchOffset": "0",
+  "EntityKnockOffset": "2615",
+  "EntityAliveOffset": "2635",
   "SmoothScan": false,
-  "IgnoreKnocked": false
+  "IgnoreKnocked": false,
+  "IgnoreBot": true
 }
